@@ -1,0 +1,28 @@
+{
+  "name": "pinterest-copy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elinadobrutskaya/pinterest-copy.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/elinadobrutskaya/pinterest-copy/issues"
+  },
+  "homepage": "https://github.com/elinadobrutskaya/pinterest-copy#readme",
+  "devDependencies": {
+    "sass-embedded": "^1.93.3",
+    "vite": "^7.2.2"
+  }
+}
