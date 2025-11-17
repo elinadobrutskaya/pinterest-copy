@@ -1,0 +1,109 @@
+.header {
+  background-color: $_header-background_color;
+  padding: 15px 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.header-wrap {
+  max-width: 1170px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.logo-wrap {
+  a {
+    display: inline-block;
+    color: $_logo_color;
+    font-family: 'Fira Sans';
+    font-weight: 800;
+    font-size: 25px;
+
+    .fa-brands,
+    .fa-pinterest {
+      font-size: 35px;
+    }
+  }
+}
+
+.logo-wrap a:hover {
+  animation: pulse-logo 0.8s infinite ease-in-out;
+}
+
+@keyframes pulse-logo {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.15) rotate(5deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+.input-search {
+  width: 90%;
+  line-height: 50px;
+  border: none;
+  border-radius: 40px;
+  background-color: $_input-seaarch_background-color;
+  padding: 0 10px 0 40px;
+  background-image: url('../img/icons/search.svg');
+  background-repeat: no-repeat;
+  background-position: 15px center;
+  background-size: 20px 20px;
+  transition: 0.3s;
+}
+
+.input-search::placeholder {
+  font-size: 15px;
+  font-weight: 400;
+  color: #9c9c9c;
+}
+
+.input-search:hover {
+  background-color: $_input-seaarch_background-color-hover;
+}
+
+.profile-link {
+  width: 50px;
+}
+
+.avatar-wrap {
+  position: relative;
+  width: 50px;
+  cursor: pointer;
+  transition: 0.3s ease;
+
+  img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -18px;
+    transform: translateY(-50%);
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid $_logo_color;
+    opacity: 0.7;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+
+  &:hover::after {
+    transform: translateY(-50%) rotate(180deg);
+    opacity: 1;
+  }
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}

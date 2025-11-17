@@ -1,4 +1,25 @@
-p {
-  font-size: 30px;
-  color: brown;
+@import './cdn';
+@import './variables';
+@import './header';
+@import './main-sections.scss';
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  list-style: none;
+  text-decoration: none;
+}
+
+.container {
+  max-width: 1170px;
+  margin: 0 auto;
+  padding: 0 15px;
+  position: relative;
+  z-index: 3;
+}
+
+html {
+  font-family: 'Oxygen', sans-serif;
+  font-weight: 400;
 }
