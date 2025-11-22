@@ -7,7 +7,7 @@
 }
 
 .header-wrap {
-  max-width: 1170px;
+  max-width: 98%;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
@@ -52,11 +52,13 @@
   border-radius: 40px;
   background-color: $_input-seaarch_background-color;
   padding: 0 10px 0 40px;
-  background-image: url('../img/icons/search.svg');
   background-repeat: no-repeat;
   background-position: 15px center;
   background-size: 20px 20px;
   transition: 0.3s;
+  font-size: 17px;
+  font-weight: 400;
+  color: #232323;
 }
 
 .input-search::placeholder {
@@ -69,6 +71,15 @@
   background-color: $_input-seaarch_background-color-hover;
 }
 
+.input-search:focus {
+  outline: none;
+}
+
+.input-search::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+  display: none;
+}
 .profile-link {
   width: 50px;
 }
