@@ -1,69 +1,129 @@
-import { Element } from '../lib/element'
+import { Element } from '../lib/element.js'
 
 export function App() {
-  const root = new Element(
+  return new Element(
     'div',
-    { class: 'app' },
+    { class: 'app-wrapper' },
 
-    // HEADER
     new Element(
-      'header',
-      { class: 'header' },
+      'div',
+      { class: 'app' },
+
       new Element(
-        'div',
-        { class: 'container' },
+        'header',
+        { class: 'header' },
         new Element(
           'div',
-          { class: 'header-wrap' },
-
+          { class: 'container' },
           new Element(
             'div',
-            { class: 'logo-wrap' },
-            new Element(
-              'a',
-              { href: '#' },
-              new Element('i', { class: 'fa-brands fa-pinterest' })
-            )
-          ),
+            { class: 'header-wrap' },
 
-          new Element('input', {
-            type: 'search',
-            placeholder: 'Search...',
-            class: 'input-search',
-            id: 'input-search',
-          }),
-
-          new Element(
-            'div',
-            { class: 'profile-link' },
+            // logo
             new Element(
-              'a',
-              { href: '#' },
+              'div',
+              { class: 'logo-wrap' },
+              new Element(
+                'a',
+                { href: '#' },
+                new Element('i', { class: 'fa-brands fa-pinterest' })
+              )
+            ),
+
+            // search
+            new Element('input', {
+              type: 'search',
+              placeholder: 'Search...',
+              class: 'input-search',
+              id: 'input-search',
+            }),
+
+            // profile
+            new Element(
+              'div',
+              { class: 'profile-link' },
+
+              // avatar
               new Element(
                 'div',
-                { class: 'avatar-wrap' },
+                { class: 'avatar-wrap', id: 'avatar-wrap' },
                 new Element('img', {
                   src: '/avatar/user-avatar.png',
                   alt: 'avatar',
+                })
+              ),
+
+              // modal with boards
+              new Element(
+                'div',
+                { class: 'boards-modal', id: 'boards-modal' },
+
+                new Element(
+                  'button',
+                  { class: 'add-board-btn' },
+                  new Element('span', { textContent: 'New Board' })
+                ),
+
+                new Element('div', {
+                  class: 'boards-list',
+                  id: 'boards-list',
                 })
               )
             )
           )
         )
+      ),
+
+      // cards
+      new Element(
+        'section',
+        { class: 'main-section' },
+        new Element(
+          'div',
+          { class: 'container' },
+          new Element('div', {
+            class: 'cards-container',
+            id: 'cards-container',
+          })
+        )
       )
     ),
 
-    // MAIN SECTION
+    // create board modal
     new Element(
-      'section',
-      { class: 'main-section' },
+      'div',
+      { class: 'create-board-backdrop', id: 'create-board-backdrop' },
+
       new Element(
         'div',
-        { class: 'container' },
-        new Element('div', { class: 'cards-container', id: 'cards-container' })
+        { class: 'create-board-modal' },
+
+        new Element('h3', { textContent: 'Create Board' }),
+
+        new Element('input', {
+          type: 'text',
+          placeholder: 'Name',
+          class: 'create-board-input',
+          id: 'create-board-input',
+        }),
+
+        new Element(
+          'div',
+          { class: 'create-board-actions' },
+
+          new Element(
+            'button',
+            { class: 'btn-cancel', id: 'create-board-cancel' },
+            new Element('span', { textContent: 'Cansel' })
+          ),
+
+          new Element(
+            'button',
+            { class: 'btn-create', id: 'create-board-create' },
+            new Element('span', { textContent: 'Create' })
+          )
+        )
       )
     )
   )
-
-  return root
 }

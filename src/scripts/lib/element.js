@@ -7,14 +7,12 @@ export function Element(tagName, attributes = {}, ...children) {
   if (innerHTML) this.element.innerHTML = innerHTML
   if (onclick) this.element.onclick = onclick
 
-  // FIX dataset
   if (dataset && typeof dataset === 'object') {
     for (const key in dataset) {
       this.element.dataset[key] = dataset[key]
     }
   }
 
-  // все остальные атрибуты
   for (const key in rest) {
     const value = rest[key]
     if (typeof value === 'boolean') {
@@ -24,7 +22,6 @@ export function Element(tagName, attributes = {}, ...children) {
     }
   }
 
-  // CHILDREN
   for (const child of children) {
     if (child) this.element.append(child)
   }

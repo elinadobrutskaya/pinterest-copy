@@ -6,19 +6,17 @@ export function renderCards(cards = []) {
 
   container.innerHTML = ''
 
-  cards.forEach(({ img, desc, authorAvatar, isFavorite, id, createdAt }) => {
+  cards.forEach(({ img, desc, authorAvatar, isFavorite, id }) => {
     const card = new Element(
       'div',
       { class: 'card-wrap', dataset: { id } },
 
-      ////////image
       new Element('img', {
         src: img,
         alt: desc,
         class: 'card-img',
       }),
 
-      ////////buttons
       new Element(
         'div',
         { class: 'card-buttons' },
@@ -26,14 +24,26 @@ export function renderCards(cards = []) {
         new Element(
           'div',
           { class: 'card-buttons_left' },
+
           new Element('button', {
             class: `save ${isFavorite ? 'active' : ''}`,
-            textContent: 'Сохранить',
+            textContent: 'Save',
           }),
-          new Element('button', {
-            class: 'save-at',
-            textContent: 'Сохранить на…',
-          })
+
+          new Element(
+            'div',
+            { class: 'save-to-board-modal' },
+
+            new Element(
+              'button',
+              { class: 'save-new-board' },
+              new Element('span', { textContent: 'New Board' })
+            ),
+
+            new Element('div', {
+              class: 'save-board-list',
+            })
+          )
         ),
 
         new Element(
@@ -46,10 +56,10 @@ export function renderCards(cards = []) {
         )
       ),
 
-      //////////card info
       new Element(
         'div',
         { class: 'card-info' },
+
         new Element(
           'div',
           { class: 'card-avatar' },
@@ -58,14 +68,11 @@ export function renderCards(cards = []) {
             src: authorAvatar,
           })
         ),
+
         new Element(
           'div',
           { class: 'card-description' },
-          new Element('a', { textContent: desc, href: '#' })
-          // new Element('span', {
-          //   class: 'created-at',
-          //   textContent: new Date(createdAt * 1000).toLocaleDateString(),
-          // })
+          new Element('a', { href: '#', textContent: desc })
         )
       )
     )
