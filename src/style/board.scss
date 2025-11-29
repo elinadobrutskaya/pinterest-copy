@@ -1,0 +1,50 @@
+.board-header {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.header-wrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.board-title {
+  margin: 0 auto;
+  text-align: center;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.delete-card-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  opacity: 0;
+  transition: 0.2s ease;
+}
+
+.delete-card-btn:hover {
+  background-color: rgb(123, 0, 0);
+}
+
+.card-wrap:hover .delete-card-btn {
+  opacity: 1;
+}
+
+.card-img {
+  width: 100%;
+  display: block;
+  border-radius: 10px;
+}

@@ -124,6 +124,71 @@ export function App() {
           )
         )
       )
+    ),
+    //report
+    new Element(
+      'div',
+      { class: 'report-backdrop', id: 'report-backdrop' },
+
+      new Element(
+        'div',
+        { class: 'report-modal' },
+
+        new Element('h3', { textContent: 'Report Image' }),
+
+        new Element(
+          'div',
+          { class: 'report-options' },
+
+          new Element(
+            'label',
+            {},
+            new Element('input', {
+              type: 'radio',
+              name: 'report',
+              value: 'inappropriate',
+            }),
+            new Element('span', { textContent: 'Inappropriate content' })
+          ),
+          new Element(
+            'label',
+            {},
+            new Element('input', {
+              type: 'radio',
+              name: 'report',
+              value: 'spam',
+            }),
+            new Element('span', { textContent: 'Spam or misleading' })
+          ),
+          new Element(
+            'label',
+            {},
+            new Element('input', {
+              type: 'radio',
+              name: 'report',
+              value: 'copyright',
+            }),
+            new Element('span', { textContent: 'Copyright violation' })
+          )
+        ),
+
+        new Element(
+          'div',
+          { class: 'report-actions' },
+
+          new Element(
+            'button',
+            { class: 'btn-cancel', id: 'report-cancel' },
+            new Element('span', { textContent: 'Cancel' })
+          ),
+
+          new Element(
+            'button',
+            { class: 'btn-ok', id: 'report-ok' },
+            new Element('span', { textContent: 'OK' })
+          )
+        )
+      )
     )
   )
 }

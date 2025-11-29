@@ -1,7 +1,12 @@
 import { App } from './components/renderApp.js'
 import { renderCards } from './components/renderCards.js'
 import { addBoard, renderBoardsList } from './components/renderBoards.js'
-import { boards, saveBoards } from './states/storage.js'
+import {
+  boards,
+  saveBoards,
+  hiddenCards,
+  saveHiddenCards,
+} from './states/storage.js'
 
 let cardsData = []
 
@@ -29,14 +34,15 @@ async function loadCards() {
       'https://6921838a512fb4140be070b9.mockapi.io/api/cards'
     )
     const data = await res.json()
-    cardsData = data
+    cardsData = data.filter((card) => !hiddenCards.includes(card.id))
+
     renderCards(cardsData)
   } catch (err) {
     console.error('Load error:', err)
   }
 }
 
-// avatar → boards modal
+// avatar + boards modal
 const avatar = document.getElementById('avatar-wrap')
 const modal = document.getElementById('boards-modal')
 
@@ -70,6 +76,16 @@ document.getElementById('create-board-create').addEventListener('click', () => {
     addBoard(value)
     input.value = ''
     document.getElementById('create-board-backdrop').classList.remove('open')
+  }
+})
+
+//name of the board click
+document.addEventListener('click', (e) => {
+  const boardLink = e.target.closest('.board-link')
+  if (boardLink) {
+    const boardItem = boardLink.parentNode
+    const id = boardItem.dataset.id
+    window.location.href = `/board.html?id=${id}`
   }
 })
 
@@ -131,8 +147,10 @@ function saveCardToBoard(boardId, cardId) {
   const board = boards.find((b) => b.id === boardId)
   if (!board) return
 
-  if (!board.cards.includes(cardId)) {
-    board.cards.push(cardId)
+  const cardObj = cardsData.find((c) => c.id == cardId)
+  if (!cardObj) return
+  if (!board.cards.some((c) => c.id == cardId)) {
+    board.cards.push(cardObj)
   }
 
   saveBoards()
@@ -160,4 +178,47 @@ document.addEventListener('click', (e) => {
   }
 })
 
+//report
+let cardToReport = null
+
+// open window
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.report')
+  if (!btn) return
+
+  const card = btn.closest('.card-wrap')
+  cardToReport = card.dataset.id
+
+  document.getElementById('report-backdrop').classList.add('open')
+})
+
+// close window
+document.getElementById('report-cancel').addEventListener('click', () => {
+  document.getElementById('report-backdrop').classList.remove('open')
+})
+
+// report agree
+document.getElementById('report-ok').addEventListener('click', () => {
+  const reason = document.querySelector('input[name="report"]:checked')
+
+  if (!reason) {
+    alert('Please select a reason')
+    return
+  }
+
+  hideReportedCard(cardToReport)
+
+  document.getElementById('report-backdrop').classList.remove('open')
+})
+
+//delete card after report
+function hideReportedCard(id) {
+  cardsData = cardsData.filter((card) => card.id != id)
+  if (!hiddenCards.includes(id)) {
+    hiddenCards.push(id)
+    saveHiddenCards()
+  }
+  cardsData = cardsData.filter((card) => card.id != id)
+  renderCards(cardsData)
+}
 loadCards()

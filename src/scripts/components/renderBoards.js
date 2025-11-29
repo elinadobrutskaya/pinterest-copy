@@ -9,9 +9,11 @@ export function renderBoardsList() {
   boards.forEach((board) => {
     const item = document.createElement('div')
     item.className = 'board-item'
+    item.dataset.id = board.id
 
     const title = document.createElement('span')
     title.textContent = board.title
+    title.className = 'board-link'
 
     const delBtn = document.createElement('button')
     delBtn.className = 'delete-board'

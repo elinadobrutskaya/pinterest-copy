@@ -1,7 +1,7 @@
 import { Element } from '../lib/element.js'
 
-export function renderCards(cards = []) {
-  const container = document.getElementById('cards-container')
+export function renderCards(cards = [], target) {
+  const container = target || document.getElementById('cards-container')
   if (!container) return
 
   container.innerHTML = ''
