@@ -24,7 +24,10 @@ export function renderBoardsList() {
     const delBtn = new Element('button', {
       class: 'delete-board',
       textContent: '✖',
-      dataset: { id: board.id },
+      onclick: () => {
+        removeBoard(board.id)
+        renderBoardsList()
+      },
     })
 
     item.append(title, delBtn)

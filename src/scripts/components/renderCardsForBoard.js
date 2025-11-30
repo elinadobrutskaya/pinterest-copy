@@ -1,13 +1,13 @@
 import { Element } from '../lib/element.js'
-import { boards, saveBoards } from '../states/storage.js'
+import { getState, removeCardFromBoard } from '../states/boardsStore.js'
 
 export function renderCardsBoard(boardId) {
   const container = document.querySelector('.cards-container')
   if (!container) return
   container.innerHTML = ''
 
-  const board = boards.find((b) => b.id === boardId)
-  if (!board) return
+  const board = getState().boards.find((b) => String(b.id) === String(boardId))
+  if (!board || !board.cards) return
 
   board.cards.forEach((card) => {
     if (!card) return
@@ -22,8 +22,7 @@ export function renderCardsBoard(boardId) {
         class: 'delete-card-btn',
         textContent: '✖',
         onclick: () => {
-          board.cards = board.cards.filter((c) => c.id !== card.id)
-          saveBoards()
+          removeCardFromBoard(boardId, card.id)
           renderCardsBoard(boardId)
         },
       }),
@@ -34,12 +33,15 @@ export function renderCardsBoard(boardId) {
         new Element(
           'div',
           { class: 'card-avatar' },
-          new Element('img', { src: card.authorAvatar, alt: 'avatar' })
+          new Element('img', {
+            src: card.authorAvatar || '/avatar/user-avatar.png',
+            alt: 'avatar',
+          })
         ),
         new Element(
           'div',
           { class: 'card-description' },
-          new Element('a', { href: '#', textContent: card.desc })
+          new Element('a', { href: '#', textContent: card.desc || '' })
         )
       )
     )
