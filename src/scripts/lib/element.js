@@ -1,30 +1,31 @@
 export function Element(tagName, attributes = {}, ...children) {
-  this.element = document.createElement(tagName)
-
-  const { textContent, innerHTML, onclick, dataset, ...rest } = attributes
-
-  if (textContent) this.element.textContent = textContent
-  if (innerHTML) this.element.innerHTML = innerHTML
-  if (onclick) this.element.onclick = onclick
-
+  const el = document.createElement(tagName)
+  const { textContent, innerHTML, onclick, disabled, dataset, ...rest } =
+    attributes || {}
+  if (textContent !== undefined) el.textContent = textContent
+  if (innerHTML !== undefined) el.innerHTML = innerHTML
+  if (onclick) el.onclick = onclick
+  if (disabled) el.disabled = true
   if (dataset && typeof dataset === 'object') {
     for (const key in dataset) {
-      this.element.dataset[key] = dataset[key]
+      el.dataset[key] = dataset[key]
     }
   }
 
   for (const key in rest) {
     const value = rest[key]
     if (typeof value === 'boolean') {
-      if (value) this.element.setAttribute(key, key)
-    } else {
-      this.element.setAttribute(key, value)
+      if (value) el.setAttribute(key, key)
+    } else if (value !== undefined && value !== null) {
+      el.setAttribute(key, String(value))
     }
   }
-
   for (const child of children) {
-    if (child) this.element.append(child)
+    if (!child) continue
+    if (child instanceof Node) el.appendChild(child)
+    else if (child.element instanceof Node) el.appendChild(child.element)
+    else if (typeof child === 'string' || typeof child === 'number')
+      el.append(String(child))
   }
-
-  return this.element
+  return el
 }
