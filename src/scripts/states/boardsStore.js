@@ -1,107 +1,126 @@
+// store для boards, cardsData и hiddenCards
 import Store from '../lib/store.js'
 import { Storage } from '../services/storage.js'
 
-const STORAGE_KEY = 'pinterest-boards-v1'
-const local = new Storage(STORAGE_KEY)
+const STORAGE_KEY = 'pinterest-app-state-v1'
 
-// ACTION TYPES
-const GET_BOARDS = 'GET_BOARDS'
+// actions
+const INIT = 'INIT'
+const SET_CARDS = 'SET_CARDS'
 const ADD_BOARD = 'ADD_BOARD'
-const DELETE_BOARD = 'DELETE_BOARD'
-const ADD_CARD_TO_BOARD = 'ADD_CARD_TO_BOARD'
-
-// action creators
-export function getBoardsAction(payload) {
-  return { type: GET_BOARDS, payload }
-}
-export function addBoardAction(payload) {
-  return { type: ADD_BOARD, payload }
-}
-export function deleteBoardAction(payload) {
-  return { type: DELETE_BOARD, payload }
-}
-export function addCardToBoardAction(payload) {
-  return { type: ADD_CARD_TO_BOARD, payload }
-}
-
-// default initial state
-const initialState = {
-  boards: [],
-}
+const REMOVE_BOARD = 'REMOVE_BOARD'
+const SAVE_CARD_TO_BOARD = 'SAVE_CARD_TO_BOARD'
+const HIDE_CARD = 'HIDE_CARD'
 
 // reducer
-function boardsReducer(state = initialState, action) {
+function reducer(state, action) {
   switch (action.type) {
-    case GET_BOARDS:
-      return { ...state, boards: action.payload }
+    case INIT:
+      return {
+        ...state,
+        ...action.payload,
+      }
+
+    case SET_CARDS:
+      return {
+        ...state,
+        cardsData: action.payload,
+      }
+
     case ADD_BOARD:
-      return { ...state, boards: [...state.boards, action.payload] }
-    case DELETE_BOARD:
+      return {
+        ...state,
+        boards: [...state.boards, action.payload],
+      }
+
+    case REMOVE_BOARD:
       return {
         ...state,
         boards: state.boards.filter(
           (b) => String(b.id) !== String(action.payload)
         ),
       }
-    case ADD_CARD_TO_BOARD:
+
+    case SAVE_CARD_TO_BOARD: {
+      const { boardId, card } = action.payload
       return {
         ...state,
         boards: state.boards.map((b) => {
-          if (String(b.id) === String(action.payload.boardId)) {
-            const exists = b.cards.some(
-              (c) => String(c.id) === String(action.payload.card.id)
-            )
-            return {
-              ...b,
-              cards: exists ? b.cards : [...b.cards, action.payload.card],
-            }
-          }
-          return b
+          if (String(b.id) !== String(boardId)) return b
+          // avoid duplicates by id
+          if (b.cards.some((c) => String(c.id) === String(card.id))) return b
+          return { ...b, cards: [...b.cards, card] }
         }),
       }
+    }
+
+    case HIDE_CARD: {
+      const cardId = action.payload
+      return {
+        ...state,
+        hiddenCards: state.hiddenCards.includes(String(cardId))
+          ? state.hiddenCards
+          : [...state.hiddenCards, String(cardId)],
+        cardsData: state.cardsData.filter(
+          (c) => String(c.id) !== String(cardId)
+        ),
+      }
+    }
+
     default:
       return state
   }
 }
 
-// create store
-const boardsStore = new Store(boardsReducer, initialState)
-
-const originalDispatch = boardsStore.dispatch.bind(boardsStore)
-boardsStore.dispatch = (action) => {
-  originalDispatch(action)
-  try {
-    local.save(boardsStore.getState().boards)
-  } catch (err) {
-    console.error('Error saving boards', err)
-  }
+// initial state
+const initialState = {
+  boards: [],
+  cardsData: [],
+  hiddenCards: [],
 }
 
-// initialize store
-const stored = local.load()
-if (Array.isArray(stored)) {
-  boardsStore.dispatch(getBoardsAction(stored))
-} else {
-  boardsStore.dispatch(getBoardsAction([]))
+const store = new Store(reducer, initialState)
+const local = new Storage(STORAGE_KEY)
+
+const persisted = local.load()
+if (persisted && typeof persisted === 'object') {
+  store.dispatch({ type: INIT, payload: persisted })
 }
 
-export const getBoards = () => boardsStore.getState().boards
-export const getBoardById = (id) =>
-  boardsStore.getState().boards.find((b) => String(b.id) === String(id))
+const origDispatch = store.dispatch.bind(store)
+store.dispatch = (action) => {
+  origDispatch(action)
+  local.save(store.getState())
+}
 
-// exported functions
+export function getState() {
+  return store.getState()
+}
+
+export function subscribe(listener) {
+  return store.subscribe(listener)
+}
+
+// action creators
+export function setCards(cards) {
+  store.dispatch({ type: SET_CARDS, payload: cards })
+}
+
 export function addBoard(title) {
-  const newBoard = { id: Date.now(), title, cards: [] }
-  boardsStore.dispatch(addBoardAction(newBoard))
-  return newBoard
+  const b = { id: Date.now(), title, cards: [] }
+  store.dispatch({ type: ADD_BOARD, payload: b })
 }
 
-export function deleteBoard(id) {
-  boardsStore.dispatch(deleteBoardAction(id))
+export function removeBoard(boardId) {
+  store.dispatch({ type: REMOVE_BOARD, payload: boardId })
 }
 
-export function addCardToBoard(boardId, card) {
-  boardsStore.dispatch(addCardToBoardAction({ boardId, card }))
+export function saveCardToBoard(boardId, card) {
+  store.dispatch({ type: SAVE_CARD_TO_BOARD, payload: { boardId, card } })
 }
 
-export { boardsStore }
+export function hideCard(cardId) {
+  store.dispatch({ type: HIDE_CARD, payload: cardId })
+}
+
+export default store

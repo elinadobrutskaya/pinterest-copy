@@ -10,17 +10,17 @@ export class Storage {
       const raw = STORAGE.getItem(this.key)
       if (!raw) return null
       return JSON.parse(raw)
-    } catch (err) {
-      console.error('Storage.load parse error:', err)
+    } catch (e) {
+      console.error('Storage.load parse error', e)
       return null
     }
   }
 
-  save(value) {
+  save(data) {
     try {
-      STORAGE.setItem(this.key, JSON.stringify(value))
-    } catch (err) {
-      console.error('Storage.save error:', err)
+      STORAGE.setItem(this.key, JSON.stringify(data))
+    } catch (e) {
+      console.error('Storage.save error', e)
     }
   }
 }
