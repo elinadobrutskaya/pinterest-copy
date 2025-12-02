@@ -7,6 +7,7 @@ import store, {
   hideCard,
   getState,
   subscribe,
+  removeBoard,
 } from './states/boardsStore.js'
 
 /////////////RENDER APP
